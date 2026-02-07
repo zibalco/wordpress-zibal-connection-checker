@@ -1,0 +1,76 @@
+.zibal-wrap .zibal-form input[type="text"]{
+    padding:8px;
+    width:300px;
+    margin-bottom:10px;
+}
+
+.zibal-grid{
+    display:flex;
+    gap:20px;
+    margin-top:20px;
+    flex-wrap: wrap;
+    direction: ltr;
+}
+
+.zibal-wrap .zibal-card{
+    background: #00004A;
+    color:#fff;
+    padding:25px;
+    border-radius:12px;
+    width:320px;
+    box-shadow: 0 4px 12px rgba(0,0,74,0.17);
+}
+
+.zibal-wrap .zibal-card h2{
+    color:#fff;
+    margin-top:0;
+}
+
+.zibal-wrap .zibal-ok{
+    color: lightgreen;
+}
+
+.zibal-wrap .zibal-error{
+    color:red;
+}
+
+.zibal-form{
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.zibal-flex{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    align-items: anchor-center;
+}
+
+.zibal-test-btn{
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    transition: background 0.3s;
+}
+
+.zibal-test-btn:hover{
+    background: #45a049;
+}
+
+.zibal-test-btn:disabled{
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.zibal-wrap .zibal-card p{
+    margin: 10px 0;
+    line-height: 1.6;
+}
