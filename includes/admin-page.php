@@ -11,7 +11,6 @@ add_action('admin_menu', function () {
     );
 });
 
-// AJAX handlers برای تست‌های جداگانه
 add_action('wp_ajax_zibal_test_connection', 'zibal_ajax_test_connection');
 add_action('wp_ajax_zibal_test_ip', 'zibal_ajax_test_ip');
 add_action('wp_ajax_zibal_test_merchant', 'zibal_ajax_test_merchant');
@@ -20,7 +19,7 @@ function zibal_ajax_test_connection() {
     check_ajax_referer('zibal_check_nonce', 'nonce');
     
     if (!current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized');
+        wp_send_json_error('دسترسی غیرمجاز');
     }
 
     $server = isset($_POST['server']) ? sanitize_text_field($_POST['server']) : '';
@@ -30,7 +29,7 @@ function zibal_ajax_test_connection() {
     } elseif ($server === 'outside') {
         $result = zibal_connection_test('https://gateway.zibal.io/v1/merchant');
     } else {
-        wp_send_json_error('Invalid server');
+        wp_send_json_error('سرور نامعتبر است');
     }
     
     wp_send_json_success($result);
@@ -40,7 +39,7 @@ function zibal_ajax_test_ip() {
     check_ajax_referer('zibal_check_nonce', 'nonce');
     
     if (!current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized');
+        wp_send_json_error('دسترسی غیرمجاز');
     }
     
     $result = zibal_ip_test();
@@ -51,20 +50,18 @@ function zibal_ajax_test_merchant() {
     check_ajax_referer('zibal_check_nonce', 'nonce');
     
     if (!current_user_can('manage_options')) {
-        wp_send_json_error('Unauthorized');
+        wp_send_json_error('دسترسی غیرمجاز');
     }
     
-    // Rate limiting check
     $transient_key = 'zibal_merchant_test_' . get_current_user_id();
     if (get_transient($transient_key)) {
-        wp_send_json_error('Please wait 10 seconds between tests');
+        wp_send_json_error('لطفاً 10 ثانیه بین تست‌ها صبر کنید');
     }
     
     $merchant = isset($_POST['merchant']) ? sanitize_text_field($_POST['merchant']) : '';
     
-    // Validate merchant format (حروف و اعداد مجاز)
     if (empty($merchant) || !preg_match('/^[a-zA-Z0-9]+$/', $merchant)) {
-        wp_send_json_error('Invalid merchant ID format');
+        wp_send_json_error('فرمت مرچنت کد نامعتبر است');
     }
     
     set_transient($transient_key, true, 10);
@@ -82,24 +79,21 @@ function zibal_check_page(){
     $ip_address = '';
     $merchant_status = '';
 
-    // بررسی امنیتی کامل برای فرم
     if(isset($_POST['run_test']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
         if (!isset($_POST['zibal_check_nonce_field']) || !wp_verify_nonce($_POST['zibal_check_nonce_field'], 'zibal_check_nonce')) {
-            wp_die('Security check failed.');
+            wp_die('بررسی امنیتی ناموفق بود.');
         }
 
-        // Rate limiting برای فرم کامل
         $transient_key = 'zibal_full_test_' . get_current_user_id();
         if (get_transient($transient_key)) {
-            wp_die('Please wait 30 seconds between full diagnostics.');
+            wp_die('لطفاً 30 ثانیه بین تست‌های کامل صبر کنید.');
         }
         set_transient($transient_key, true, 30);
 
         $merchant = sanitize_text_field($_POST['merchant']);
         
-        // Validate merchant format (حروف و اعداد مجاز)
         if (!empty($merchant) && !preg_match('/^[a-zA-Z0-9]+$/', $merchant)) {
-            wp_die('Invalid merchant ID format. Only letters and numbers allowed.');
+            wp_die('فرمت مرچنت کد نامعتبر است. فقط حروف و اعداد انگلیسی مجاز است.');
         }
 
         $connection_outside = zibal_connection_test('https://gateway.zibal.io/v1/merchant');
@@ -186,11 +180,11 @@ function zibal_check_page(){
                 resultElement = $('#result-' + server);
             } else if (testType === 'ip') {
                 ajaxAction = 'zibal_test_ip';
-                resultElement = null; // Will handle both elements
+                resultElement = null;
             } else if (testType === 'merchant') {
                 var merchant = $('#merchant-input').val();
                 if (!merchant || !/^[a-zA-Z0-9]+$/.test(merchant)) {
-                    alert('Please enter a valid Merchant ID (letters and numbers only)');
+                    alert('لطفاً یک مرچنت کد معتبر وارد کنید');
                     btn.prop('disabled', false).text(originalText);
                     return;
                 }
@@ -209,7 +203,6 @@ function zibal_check_page(){
                 success: function(response) {
                     if (response.success) {
                         if (testType === 'ip') {
-                            // Handle IP test with two fields
                             $('#result-ip-status').html(response.data.status);
                             $('#result-ip').html(response.data.ip);
                         } else {
@@ -225,9 +218,9 @@ function zibal_check_page(){
                 },
                 error: function() {
                     if (testType === 'ip') {
-                        $('#result-ip-status').html('<span class="zibal-error">Connection Error</span>');
+                        $('#result-ip-status').html('<span class="zibal-error">خطای اتصال</span>');
                     } else {
-                        resultElement.html('<span class="zibal-error">Connection Error</span>');
+                        resultElement.html('<span class="zibal-error">خطای اتصال</span>');
                     }
                 },
                 complete: function() {
