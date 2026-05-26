@@ -3,8 +3,8 @@
 Plugin Name: Zibal Advanced Connection Checker
 Plugin URI: https://zibal.ir/
 Description: Professional diagnostics for Zibal connectivity
-Version: 1.0
-Author: Abolfazl Abdollahi
+Version: 1.1
+Author: zibal
 Author URI: https://zibal.ir/
 Text Domain: zibal-connection-checker
 */

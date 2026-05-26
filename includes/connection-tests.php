@@ -8,7 +8,7 @@ function zibal_connection_test($url){
     }
 
     $response = wp_remote_get($url, [
-        'timeout' => 10,
+        'timeout' => 30,
         'sslverify' => true,
         'user-agent' => 'Zibal-Connection-Checker/1.0'
     ]);
@@ -29,8 +29,8 @@ function zibal_connection_test($url){
 }
 
 function zibal_ip_test(){
-    $response = wp_remote_get('https://api.ipify.org', [
-        'timeout' => 8,
+    $response = wp_remote_get('https://help.zibal.ir/ip.php', [
+        'timeout' => 10,
         'sslverify' => true
     ]);
     
