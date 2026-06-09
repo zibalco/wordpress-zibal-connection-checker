@@ -25,9 +25,9 @@ function zibal_ajax_test_connection() {
     $server = isset($_POST['server']) ? sanitize_text_field($_POST['server']) : '';
     
     if ($server === 'iran') {
-        $result = zibal_connection_test('https://gateway.zibal.ir/v1/merchant');
+        $result = zibal_connection_test('https://gateway.zibal.ir/api/healthy-check');
     } elseif ($server === 'outside') {
-        $result = zibal_connection_test('https://gateway.zibal.io/v1/merchant');
+        $result = zibal_connection_test('https://gateway.zibal.io/api/healthy-check');
     } else {
         wp_send_json_error('سرور نامعتبر است');
     }
